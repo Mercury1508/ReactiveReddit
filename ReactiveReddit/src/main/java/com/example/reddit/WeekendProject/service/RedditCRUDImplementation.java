@@ -75,11 +75,12 @@ public class RedditCRUDImplementation implements RedditCRUD{
     public Mono<String> createRedditPosts() {
         return redditAuthService.getAuthToken()
                 .flatMap(accessToken -> {
-                    return redditAuthService.post("test", "Test10", "reactive code test", accessToken)
+                    return redditAuthService.post("test", "Test987", "reactive code test", accessToken)
                             .flatMap(response -> {
-                                Mono<String> res = null;
-                                res = getPostsBySubreddit("test");
-                                return Mono.just("Post created successfully.");
+                                return getPostsBySubreddit("test")
+                                        .flatMap(resp -> {
+                                            return Mono.just("Post created successfully.");
+                                        });
                             })
                             .onErrorResume(e -> Mono.just("Failed to create post."));
                 });
